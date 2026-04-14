@@ -18,9 +18,8 @@ import {
 
 /**
  * GLOBAL ERROR SUPPRESSION
- * This must be at the top level. Many sandboxed environments report generic 
- * "Script error." for any failure in a cross-origin script (like Jotform).
- * We intercept these to prevent them from flooding the global console.
+ * Proactively silences vague "Script error." messages caused by third-party 
+ * cross-origin scripts in sandboxed environments.
  */
 if (typeof window !== 'undefined') {
   const silentError = (e) => {
@@ -32,9 +31,9 @@ if (typeof window !== 'undefined') {
     }
   };
   window.addEventListener('error', silentError, true);
-  window.onerror = function(msg, url, lineNo, columnNo, error) {
+  window.onerror = function(msg) {
     if (msg === "Script error." || (msg && msg.toString().includes("Script error"))) {
-      return true; // Prevents the firing of the default event handler
+      return true; 
     }
     return false;
   };
@@ -98,18 +97,17 @@ const Reveal = ({ children, delay = 0, direction = 'up', width = "w-full" }) => 
 // --- Standardized UI Components ---
 
 /**
- * TRIGGER CHATBOT
- * Function to trigger the Jotform Chat Agent with robust error handling and fallback.
+ * TRIGGER LIGHTBOX MODAL
+ * Function to trigger the Jotform Modal Agent based on the requested version.
  */
-const triggerChatbot = () => {
-  const agentId = "019d8941f1b87b70a991f93de29ca7d94d38";
-  const fallbackUrl = `https://agent.jotform.com/${agentId}`;
-
+const triggerLightbox = () => {
+  const formID = "019d8941f1b87b70a991f93de29ca7d94d38";
+  
   try {
     if (window.AgentInitializer && typeof window.AgentInitializer.initModalView === 'function') {
+      // Safe origin retrieval to prevent cross-origin property access errors
       let safeOrigin = "";
       try {
-        // Safe origin detection for sandboxed environments
         safeOrigin = (window.location.origin && window.location.origin !== 'null') 
           ? window.location.origin 
           : window.location.href.split(/[?#]/)[0];
@@ -118,45 +116,43 @@ const triggerChatbot = () => {
       }
 
       window.AgentInitializer.initModalView({
-        rootId: `JotformAgent-${agentId}`,
-        formID: agentId,
+        rootId: `JotformAgent-${formID}`,
+        formID: formID,
         queryParams: ["skipWelcome=1"],
         domain: "https://www.jotform.com",
         isInitialOpen: true,
         isDraggable: false,
         variant: false,
         isVoice: false,
+        // Crucial fix: provide parentURL manually to prevent the script from 
+        // trying to access window.top and throwing a cross-origin error.
         parentURL: safeOrigin
       });
     } else {
-      const bubble = document.querySelector('.jotform-agent-embed-icon') || 
-                     document.querySelector('[id*="JotformAgent"]');
-      if (bubble) {
-        bubble.click();
-      } else {
-        window.open(fallbackUrl, '_blank');
-      }
+      // Fallback if script isn't ready
+      window.open(`https://agent.jotform.com/${formID}`, '_blank');
     }
   } catch (err) {
-    window.open(fallbackUrl, '_blank');
+    // Ultimate fallback for restricted environments
+    window.open(`https://agent.jotform.com/${formID}`, '_blank');
   }
 };
 
 /**
  * PRIMARY BUTTON
- * Decision-point button that triggers the Jotform Chatbot.
+ * Coded as a decision point that triggers the Zara Lightbox.
  */
 const PrimaryButton = ({ className = "" }) => {
   return (
     <button 
       onClick={(e) => {
         e.preventDefault();
-        triggerChatbot();
+        triggerLightbox();
       }}
       className={`group relative inline-flex items-center justify-center gap-4 overflow-hidden rounded-2xl bg-gradient-to-r from-[#5B5FFF] to-[#7C7FFF] px-12 py-8 md:px-16 md:py-9 text-2xl md:text-3xl font-[1000] text-white transition-all hover:brightness-110 hover:scale-[1.02] active:scale-95 shadow-[0_20px_40px_-10px_rgba(91,95,255,0.4)] ${className}`}
     >
       <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_2s_infinite]" />
-      <span className="relative flex items-center gap-4 tracking-tighter uppercase text-center">
+      <span className="relative flex items-center gap-4 tracking-tighter uppercase">
         Show Me How This Works
         <ArrowRight className="w-8 h-8 md:w-9 md:h-9 group-hover:translate-x-2 transition-transform" strokeWidth={3} />
       </span>
@@ -212,7 +208,7 @@ const Navbar = () => {
           <a href="#proof" className="hover:text-[#5B5FFF] transition-colors text-inherit no-underline">Results</a>
           <a href="#how" className="hover:text-[#5B5FFF] transition-colors text-inherit no-underline">Process</a>
           <button 
-            onClick={() => triggerChatbot()} 
+            onClick={() => triggerLightbox()} 
             className={`px-6 py-2.5 rounded-full transition-all shadow-xl font-black uppercase text-[10px] tracking-widest ${isScrolled ? 'bg-[#0B1220] text-white hover:bg-slate-800' : 'bg-white text-[#0B1220] hover:bg-slate-100'}`}
           >
             Get Started
@@ -451,26 +447,27 @@ const Footer = () => (
 // --- MAIN APP COMPONENT ---
 
 export default function App() {
-  // Load Jotform Chatbot Script
+  // Load Jotform Embedded Agent Script
   useEffect(() => {
-    const scriptId = 'jotform-chatbot-script';
+    const scriptId = 'jotform-lightbox-script';
     if (document.getElementById(scriptId)) return;
 
     const script = document.createElement('script');
     script.id = scriptId;
-    script.src = 'https://cdn.jotfor.ms/agent/embedjs/019d8941f1b87b70a991f93de29ca7d94d38/embed.js';
+    script.src = 'https://cdn.jotfor.ms/s/umd/28b754a8080/for-embedded-agent.js';
     script.async = true;
     script.defer = true;
     
-    // Using a safer script injection to avoid CORS/Sandbox "Script error"
-    try {
-      document.body.appendChild(script);
-    } catch (e) {
-      console.warn('Bot injection failed.');
-    }
+    script.onload = () => console.log('Lightbox script initialized.');
+    script.onerror = (e) => {
+      console.warn('Lightbox script failed to load.');
+      if (e && typeof e.preventDefault === 'function') e.preventDefault();
+    };
+
+    document.body.appendChild(script);
 
     return () => {
-      // In persistent environments, we usually leave the script to avoid issues on re-renders
+      // Keep script loaded to prevent issues on hot-reload
     };
   }, []);
 
@@ -488,9 +485,9 @@ export default function App() {
           -webkit-font-smoothing: antialiased;
         }
 
-        /* Ensure Chatbot Widget doesn't clash with nav and fix visibility */
-        .jotform-agent-embed-icon, #JotformAgent-019d8941f1b87b70a991f93de29ca7d94d38 {
-            z-index: 99999 !important;
+        /* Ensure Lightbox Overlay is properly tiered */
+        #JotformAgent-019d8941f1b87b70a991f93de29ca7d94d38 {
+            z-index: 999999 !important;
         }
       `}</style>
       
