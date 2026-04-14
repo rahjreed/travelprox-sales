@@ -98,23 +98,14 @@ const Reveal = ({ children, delay = 0, direction = 'up', width = "w-full" }) => 
 
 /**
  * TRIGGER LIGHTBOX MODAL
- * Function to trigger the Jotform Modal Agent based on the requested version.
+ * Function to trigger the Jotform Modal Agent.
+ * Fixed: Removed automatic window.open redirect to keep user on page.
  */
 const triggerLightbox = () => {
   const formID = "019d8941f1b87b70a991f93de29ca7d94d38";
   
-  try {
-    if (window.AgentInitializer && typeof window.AgentInitializer.initModalView === 'function') {
-      // Safe origin retrieval to prevent cross-origin property access errors
-      let safeOrigin = "";
-      try {
-        safeOrigin = (window.location.origin && window.location.origin !== 'null') 
-          ? window.location.origin 
-          : window.location.href.split(/[?#]/)[0];
-      } catch (e) {
-        safeOrigin = "";
-      }
-
+  if (window.AgentInitializer && typeof window.AgentInitializer.initModalView === 'function') {
+    try {
       window.AgentInitializer.initModalView({
         rootId: `JotformAgent-${formID}`,
         formID: formID,
@@ -124,17 +115,15 @@ const triggerLightbox = () => {
         isDraggable: false,
         variant: false,
         isVoice: false,
-        // Crucial fix: provide parentURL manually to prevent the script from 
-        // trying to access window.top and throwing a cross-origin error.
-        parentURL: safeOrigin
+        // Using a hardcoded string or window.location.href (avoiding window.top)
+        // prevents the cross-origin "Location.href" block that often crashes the script.
+        parentURL: window.location.href.split(/[?#]/)[0]
       });
-    } else {
-      // Fallback if script isn't ready
-      window.open(`https://agent.jotform.com/${formID}`, '_blank');
+    } catch (err) {
+      console.warn("Lightbox failed to open via AgentInitializer. Checking script status...");
     }
-  } catch (err) {
-    // Ultimate fallback for restricted environments
-    window.open(`https://agent.jotform.com/${formID}`, '_blank');
+  } else {
+    console.warn("Jotform AgentInitializer is not yet available on the window object.");
   }
 };
 
@@ -193,7 +182,7 @@ const Navbar = () => {
 
   return (
     <nav className={`fixed top-0 w-full z-[100] transition-all duration-500 px-4 sm:px-12 ${isScrolled ? 'py-4' : 'py-8'}`}>
-      <div className={`max-w-7xl mx-auto flex items-center justify-between transition-all duration-500 rounded-2xl border px-6 py-4 ${
+      <div className={`max-w-7xl mx-auto flex items-center justify-between transition-all duration-500 rounded-2xl border px-8 py-4 ${
         isScrolled ? 'bg-white/95 shadow-xl backdrop-blur-xl border-slate-200' : 'bg-white/5 border-white/10 backdrop-blur-sm'
       }`}>
         <div className="flex items-center gap-2 cursor-pointer" onClick={scrollToTop}>
