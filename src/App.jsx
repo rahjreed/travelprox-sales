@@ -118,17 +118,17 @@ const AggressiveCTA = ({ onClick, text = "Get People Reaching Out To You", subte
         onClick={(e) => { e.preventDefault(); onClick(); }}
         className={`relative w-full sm:w-auto inline-flex items-center justify-center gap-6 overflow-hidden rounded-2xl bg-white px-10 py-7 md:px-14 md:py-8 text-xl md:text-2xl font-[1000] text-[#0F172A] border border-white transition-all hover:scale-[1.02] active:scale-95 ${className}`}
       >
-        <span className="relative flex items-center gap-4 tracking-tighter uppercase text-center leading-none">
+        <span className="relative flex items-center gap-4 tracking-tighter uppercase text-center leading-none text-left">
           {text}
           <ArrowRight className="w-6 h-6 md:w-8 md:h-8 group-hover:translate-x-2 transition-transform text-[#5B5FFF]" strokeWidth={4} />
         </span>
       </button>
     </div>
     <div className={`flex flex-col items-${alignment === 'center' ? 'center' : 'start'} gap-1 px-2`}>
-      <p className="text-white text-[10px] md:text-xs font-black uppercase tracking-[0.2em] opacity-90">
+      <p className="text-white text-[10px] md:text-xs font-black uppercase tracking-[0.2em] opacity-90 text-center">
         People are already getting inbound messages using this
       </p>
-      {subtext && <p className="text-slate-400 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em]">{subtext}</p>}
+      {subtext && <p className="text-slate-400 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-center">{subtext}</p>}
     </div>
   </div>
 );
@@ -150,7 +150,7 @@ const Navbar = ({ onTrigger }) => {
           <div className="w-10 h-10 bg-[#5B5FFF] rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(91,95,255,0.5)]"><Zap className="w-6 h-6 text-white fill-white" /></div>
           <span className="font-black text-xl md:text-2xl tracking-tighter uppercase text-white">Inbound Lead System™</span>
         </div>
-        <button onClick={onTrigger} className="px-6 py-2.5 rounded-full transition-all shadow-xl font-black uppercase text-[10px] tracking-widest bg-white text-[#0B1220] hover:bg-[#5B5FFF] hover:text-white">See How This Works</button>
+        <button onClick={onTrigger} className="px-6 py-2.5 rounded-full transition-all shadow-xl font-black uppercase text-[10px] tracking-widest bg-white text-[#0B1220] hover:bg-[#5B5FFF] hover:text-white transition-colors">See How This Works</button>
       </div>
     </nav>
   );
@@ -185,7 +185,7 @@ const Hero = ({ onTrigger }) => (
         </h1>
       </Reveal>
 
-      <div className="max-w-4xl mx-auto mb-16">
+      <div className="max-w-5xl mx-auto mb-16">
         <Reveal delay={600}>
           <div className="space-y-12">
             <p className="text-2xl md:text-4xl text-slate-300 font-medium leading-[1.2] tracking-tight">
@@ -193,6 +193,19 @@ const Hero = ({ onTrigger }) => (
               and still getting ignored…
             </p>
             
+            {/* HERO VIDEO INTEGRATION */}
+            <div className="relative group max-w-4xl mx-auto my-16">
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#5B5FFF] to-[#8E7CFF] rounded-[2rem] blur opacity-30 group-hover:opacity-60 transition duration-1000" />
+              <div className="relative aspect-video w-full rounded-[1.5rem] md:rounded-[2rem] overflow-hidden bg-black shadow-2xl border border-white/10">
+                <iframe 
+                  src="https://player.mediadelivery.net/play/587199/a6ea9b0b-7601-441f-9d8b-8a3bd37b4f1e" 
+                  className="absolute top-0 left-0 w-full h-full border-none"
+                  allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;" 
+                  allowFullScreen
+                />
+              </div>
+            </div>
+
             <p className="text-4xl md:text-6xl text-white font-black italic uppercase tracking-tighter">
                 effort isn't your problem.
             </p>
@@ -276,10 +289,10 @@ const PerspectiveShift = () => (
                     <div className="w-16 h-16 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center">
                         <DoorOpen className="w-10 h-10" />
                     </div>
-                    <h3 className="text-3xl md:text-4xl font-[1000] text-white uppercase tracking-tighter italic text-left leading-none"><span className="text-red-500">CHASING</span> is Interruption</h3>
+                    <h3 className="text-3xl md:text-4xl font-[1000] text-white uppercase tracking-tighter italic text-left leading-none text-left"><span className="text-red-500">CHASING</span> is Interruption</h3>
                 </div>
                 <div className="space-y-6 text-lg md:text-xl text-slate-400 font-medium leading-relaxed text-left">
-                    <p>It's like <span className="text-white font-bold underline decoration-red-500/50">knocking on a stranger's door</span> while they're eating dinner.</p>
+                    <p>It's like <span className="text-white font-bold underline decoration-red-500/50 text-left">knocking on a stranger's door</span> while they're eating dinner.</p>
                     <p>When you cold DM people or post generic "buy from me" content, people feel <span className="text-white italic">interrupted and pressured.</span></p>
                     <p>Their guard goes up instantly. They want to end the interaction quickly. You are a <span className="text-white border-b border-white/20">pest</span>, not a professional advisor.</p>
                 </div>
@@ -292,10 +305,10 @@ const PerspectiveShift = () => (
                     <div className="w-16 h-16 bg-[#5B5FFF]/20 text-[#5B5FFF] rounded-2xl flex items-center justify-center">
                         <Search className="w-10 h-10" />
                     </div>
-                    <h3 className="text-3xl md:text-4xl font-[1000] text-white uppercase tracking-tighter italic text-left leading-none"><span className="text-[#5B5FFF]">ATTRACTING</span> is Intent</h3>
+                    <h3 className="text-3xl md:text-4xl font-[1000] text-white uppercase tracking-tighter italic text-left leading-none text-left"><span className="text-[#5B5FFF]">ATTRACTING</span> is Intent</h3>
                 </div>
                 <div className="space-y-6 text-lg md:text-xl text-slate-400 font-medium leading-relaxed text-left">
-                    <p>It's like someone <span className="text-white font-bold underline decoration-[#5B5FFF]/50">actively searching</span> for the exact result you provide.</p>
+                    <p>It's like someone <span className="text-white font-bold underline decoration-[#5B5FFF]/50 text-left">actively searching</span> for the exact result you provide.</p>
                     <p>When someone is looking for a solution, they are <span className="text-white italic">open, curious, and ready to buy.</span></p>
                     <p>They aren't looking to get rid of you—they are looking for you to lead them. You are the <span className="text-white border-b border-white/20">Authority</span> they've been waiting for.</p>
                 </div>
@@ -334,8 +347,8 @@ const BridgeSection = () => (
                             <div key={i} className="flex gap-6 items-start text-left">
                                 <div className="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center flex-shrink-0 mt-1"><X strokeWidth={3} /></div>
                                 <div>
-                                    <h4 className="text-2xl font-black uppercase text-[#0F172A] mb-2">{item.title}</h4>
-                                    <p className="text-slate-500 text-lg font-medium">{item.desc}</p>
+                                    <h4 className="text-2xl font-black uppercase text-[#0F172A] mb-2 text-left">{item.title}</h4>
+                                    <p className="text-slate-500 text-lg font-medium text-left">{item.desc}</p>
                                 </div>
                             </div>
                         ))}
@@ -351,7 +364,7 @@ const PainReality = () => (
     <div className="max-w-7xl mx-auto px-6">
         <Reveal>
             <span className="text-[#5B5FFF] font-black uppercase tracking-widest text-sm mb-10 block text-center">The Brutal Truth</span>
-            <h2 className="text-5xl md:text-[9rem] font-[1000] uppercase tracking-tighter leading-[0.8] text-[#0F172A] mb-12 text-center">
+            <h2 className="text-5xl md:text-[9rem] font-[1000] uppercase tracking-tighter leading-[0.8] text-[#0F172A] mb-12 text-center uppercase">
               Most business owners <span className="text-red-600 block text-center uppercase">STAY STUCK & BROKE</span> 
             </h2>
             <p className="text-2xl md:text-5xl font-black text-slate-800 tracking-tighter mb-20 text-center uppercase">
@@ -379,11 +392,11 @@ const PainReality = () => (
 
 const EngineSection = ({ onTrigger }) => (
     <section className="py-48 bg-[#0B1220] relative">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6 text-center">
             <div className="text-center mb-32">
                 <Reveal>
                     <span className="inline-block mb-8 text-xs font-black tracking-[0.5em] uppercase text-[#5B5FFF] px-6 py-2 border border-[#5B5FFF]/20 rounded-full text-center">The Solution</span>
-                    <h2 className="text-5xl md:text-9xl font-[1000] text-white uppercase tracking-tighter leading-none mb-12 text-center">
+                    <h2 className="text-5xl md:text-9xl font-[1000] text-white uppercase tracking-tighter leading-none mb-12 text-center uppercase">
                         The <span className="text-[#5B5FFF]">INBOUND</span> Engine
                     </h2>
                     <p className="text-xl md:text-3xl text-slate-500 max-w-3xl mx-auto font-medium text-center">
@@ -443,10 +456,10 @@ const AuthorityProfile = () => (
                         <div className="inline-flex items-center gap-3 px-4 py-2 text-[10px] font-black tracking-[0.4em] uppercase bg-[#5B5FFF]/5 text-[#5B5FFF] border border-[#5B5FFF]/20 rounded-full">
                            Roger Reed — Using the Inbound Lead System.
                         </div>
-                        <h2 className="text-5xl md:text-7xl font-[1000] text-[#0F172A] uppercase tracking-tighter leading-[0.9]">
+                        <h2 className="text-5xl md:text-7xl font-[1000] text-[#0F172A] uppercase tracking-tighter leading-[0.9] text-left">
                             Helping business owners <span className="text-[#5B5FFF]">get leads</span> without the chase.
                         </h2>
-                        <p className="text-xl md:text-2xl text-slate-500 font-medium leading-relaxed">
+                        <p className="text-xl md:text-2xl text-slate-500 font-medium leading-relaxed text-left">
                             I spent years struggling to find consistent results in my own business until I realized that raw effort is no match for a high-converting system. I built this engine to handle the qualifying and filtering so you can focus on what actually makes you money: <span className="text-[#0F172A] font-bold italic">Closing high-value clients.</span>
                         </p>
                         <div className="flex items-center gap-4 text-[#5B5FFF]">
@@ -462,7 +475,7 @@ const AuthorityProfile = () => (
 
 const FinalCTA = ({ onTrigger }) => (
     <section id="cta" className="py-56 md:py-80 bg-slate-50 border-t border-slate-100 relative overflow-hidden text-center">
-        <div className="max-w-5xl mx-auto relative z-10 px-6">
+        <div className="max-w-5xl mx-auto relative z-10 px-6 text-center">
             <Reveal>
                 <div className="text-[#0F172A] text-2xl md:text-6xl font-[1000] uppercase tracking-[-0.04em] mb-12 leading-tight text-center">
                     If you're serious about building a <br className="hidden md:block" /> real <span className="text-[#5B5FFF] underline underline-offset-8 text-center">business…</span>
@@ -494,7 +507,7 @@ const Footer = () => (
         <div className="w-10 h-10 bg-[#5B5FFF] rounded-xl flex items-center justify-center shadow-lg"><Zap className="w-6 h-6 text-white fill-white" /></div>
         <span className="font-black text-2xl tracking-tighter uppercase text-white text-left">Inbound Lead System™</span>
       </div>
-      <div className="text-[11px] text-slate-600 font-bold uppercase tracking-[0.3em] text-center md:text-right">
+      <div className="text-[11px] text-slate-600 font-bold uppercase tracking-[0.3em] text-center md:text-right text-right">
         &copy; {new Date().getFullYear()} Inbound Lead System. <br /> 
         Helping business owners get leads without chasing.
       </div>
@@ -539,4 +552,4 @@ export default function App() {
       <ZaraModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
-} 
+}
