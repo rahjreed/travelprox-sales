@@ -76,7 +76,35 @@ const Reveal = ({ children, delay = 0, direction = 'up', width = "w-full" }) => 
 };
 
 /**
- * ZARA MODAL
+ * LIGHTBOX VIDEO MODAL
+ */
+const VideoLightbox = ({ isOpen, onClose, videoUrl }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 md:p-12 animate-in fade-in duration-300">
+      <div className="absolute inset-0 bg-black/95 backdrop-blur-md" onClick={onClose} />
+      
+      <div className="relative w-full max-w-6xl aspect-video bg-black rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(91,95,255,0.3)] animate-in zoom-in-95 duration-500">
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all"
+        >
+          <X className="w-6 h-6" />
+        </button>
+        <iframe 
+          src={`${videoUrl}?autoplay=1`}
+          className="w-full h-full border-none"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;" 
+          allowFullScreen
+        />
+      </div>
+    </div>
+  );
+};
+
+/**
+ * ZARA LEAD QUALIFICATION MODAL
  */
 const ZaraModal = ({ isOpen, onClose }) => {
   useEffect(() => {
@@ -118,7 +146,7 @@ const AggressiveCTA = ({ onClick, text = "Get People Reaching Out To You", subte
         onClick={(e) => { e.preventDefault(); onClick(); }}
         className={`relative w-full sm:w-auto inline-flex items-center justify-center gap-6 overflow-hidden rounded-2xl bg-white px-10 py-7 md:px-14 md:py-8 text-xl md:text-2xl font-[1000] text-[#0F172A] border border-white transition-all hover:scale-[1.02] active:scale-95 ${className}`}
       >
-        <span className="relative flex items-center gap-4 tracking-tighter uppercase text-center leading-none text-left">
+        <span className="relative flex items-center gap-4 tracking-tighter uppercase text-center leading-none">
           {text}
           <ArrowRight className="w-6 h-6 md:w-8 md:h-8 group-hover:translate-x-2 transition-transform text-[#5B5FFF]" strokeWidth={4} />
         </span>
@@ -156,7 +184,7 @@ const Navbar = ({ onTrigger }) => {
   );
 };
 
-const Hero = ({ onTrigger }) => (
+const Hero = ({ onTrigger, onVideoTrigger }) => (
   <section className="relative min-h-screen flex items-center pt-32 pb-24 px-6 overflow-hidden bg-[#0B1220]">
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
@@ -193,16 +221,35 @@ const Hero = ({ onTrigger }) => (
               and still getting ignored…
             </p>
             
-            {/* HERO VIDEO INTEGRATION */}
-            <div className="relative group max-w-4xl mx-auto my-16">
-              <div className="absolute -inset-1 bg-gradient-to-r from-[#5B5FFF] to-[#8E7CFF] rounded-[2rem] blur opacity-30 group-hover:opacity-60 transition duration-1000" />
-              <div className="relative aspect-video w-full rounded-[1.5rem] md:rounded-[2rem] overflow-hidden bg-black shadow-2xl border border-white/10">
-                <iframe 
-                  src="https://player.mediadelivery.net/play/587199/a6ea9b0b-7601-441f-9d8b-8a3bd37b4f1e" 
-                  className="absolute top-0 left-0 w-full h-full border-none"
-                  allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;" 
-                  allowFullScreen
-                />
+            {/* HERO VIDEO THUMBNAIL (Triggers Lightbox) */}
+            <div 
+              onClick={onVideoTrigger}
+              className="relative group max-w-3xl mx-auto my-16 cursor-pointer"
+            >
+              <div className="absolute -inset-2 bg-gradient-to-r from-[#5B5FFF] to-[#8E7CFF] rounded-[2.5rem] blur-2xl opacity-20 group-hover:opacity-40 transition duration-1000" />
+              <div className="relative aspect-video w-full rounded-[2rem] overflow-hidden bg-slate-900 shadow-2xl border border-white/10 group-hover:scale-[1.02] transition-transform duration-500">
+                {/* Background Image Placeholder */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#0F172A] to-black flex items-center justify-center">
+                    <div className="text-center">
+                        <Sparkles className="w-12 h-12 text-[#5B5FFF] mx-auto mb-4 opacity-50" />
+                        <span className="text-white/20 font-black uppercase tracking-[1em] text-xs">Video Preview</span>
+                    </div>
+                </div>
+                
+                {/* Play Button UI */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="relative">
+                        <div className="absolute inset-0 bg-[#5B5FFF] rounded-full blur-2xl animate-pulse opacity-50" />
+                        <div className="relative w-20 h-20 md:w-28 md:h-28 bg-white rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500">
+                            <Play className="w-8 h-8 md:w-12 md:h-12 text-[#0F172A] fill-[#0F172A] ml-2" />
+                        </div>
+                    </div>
+                </div>
+                
+                {/* Overlay Text */}
+                <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
+                    <p className="text-white font-black uppercase tracking-widest text-sm text-left">Click to watch: The Shift That Changes Everything</p>
+                </div>
               </div>
             </div>
 
@@ -229,7 +276,6 @@ const Hero = ({ onTrigger }) => (
         <div className="flex justify-center">
           <AggressiveCTA 
             onClick={onTrigger} 
-            text="Get People Reaching Out To You" 
             alignment="center"
           />
         </div>
@@ -247,7 +293,6 @@ const CallOut = () => (
           Be honest… <br /> this sound like you?
         </h2>
       </Reveal>
-      
       <div className="grid md:grid-cols-3 gap-8">
         {[
           { text: "You post but nobody seems to care", icon: <MessageSquare /> },
@@ -275,47 +320,44 @@ const PerspectiveShift = () => (
     <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
       <div className="text-center mb-24">
         <Reveal>
-            <h2 className="text-5xl md:text-8xl font-[1000] text-white uppercase tracking-[-0.06em] mb-6 text-center">
+            <h2 className="text-5xl md:text-8xl font-[1000] text-white uppercase tracking-[-0.06em] mb-6 text-center text-left">
                 Chasing vs <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5B5FFF] to-[#8E7CFF]">Attracting</span>
             </h2>
             <p className="text-slate-400 text-lg md:text-2xl font-medium tracking-tight uppercase tracking-widest text-center">This is the shift that changes the math of your business</p>
         </Reveal>
       </div>
-
       <div className="grid lg:grid-cols-2 gap-12 md:gap-24 items-stretch">
         <Reveal direction="left" delay={200}>
-            <div className="h-full bg-white/5 border border-white/10 p-10 md:p-16 rounded-[3rem] space-y-10 border-l-4 border-l-red-500/50">
-                <div className="flex items-center gap-6 text-left">
+            <div className="h-full bg-white/5 border border-white/10 p-10 md:p-16 rounded-[3rem] space-y-10 border-l-4 border-l-red-500/50 text-left">
+                <div className="flex items-center gap-6">
                     <div className="w-16 h-16 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center">
                         <DoorOpen className="w-10 h-10" />
                     </div>
-                    <h3 className="text-3xl md:text-4xl font-[1000] text-white uppercase tracking-tighter italic text-left leading-none text-left"><span className="text-red-500">CHASING</span> is Interruption</h3>
+                    <h3 className="text-3xl md:text-4xl font-[1000] text-white uppercase tracking-tighter italic leading-none"><span className="text-red-500">CHASING</span> is Interruption</h3>
                 </div>
-                <div className="space-y-6 text-lg md:text-xl text-slate-400 font-medium leading-relaxed text-left">
-                    <p>It's like <span className="text-white font-bold underline decoration-red-500/50 text-left">knocking on a stranger's door</span> while they're eating dinner.</p>
+                <div className="space-y-6 text-lg md:text-xl text-slate-400 font-medium leading-relaxed">
+                    <p>It's like <span className="text-white font-bold underline decoration-red-500/50">knocking on a stranger's door</span> while they're eating dinner.</p>
                     <p>When you cold DM people or post generic "buy from me" content, people feel <span className="text-white italic">interrupted and pressured.</span></p>
                     <p>Their guard goes up instantly. They want to end the interaction quickly. You are a <span className="text-white border-b border-white/20">pest</span>, not a professional advisor.</p>
                 </div>
             </div>
         </Reveal>
-
         <Reveal direction="right" delay={400}>
-            <div className="h-full bg-gradient-to-br from-[#5B5FFF]/10 to-transparent border border-[#5B5FFF]/20 p-10 md:p-16 rounded-[3rem] space-y-10 border-r-4 border-r-[#5B5FFF]">
-                <div className="flex items-center gap-6 text-left">
+            <div className="h-full bg-gradient-to-br from-[#5B5FFF]/10 to-transparent border border-[#5B5FFF]/20 p-10 md:p-16 rounded-[3rem] space-y-10 border-r-4 border-r-[#5B5FFF] text-left">
+                <div className="flex items-center gap-6">
                     <div className="w-16 h-16 bg-[#5B5FFF]/20 text-[#5B5FFF] rounded-2xl flex items-center justify-center">
                         <Search className="w-10 h-10" />
                     </div>
-                    <h3 className="text-3xl md:text-4xl font-[1000] text-white uppercase tracking-tighter italic text-left leading-none text-left"><span className="text-[#5B5FFF]">ATTRACTING</span> is Intent</h3>
+                    <h3 className="text-3xl md:text-4xl font-[1000] text-white uppercase tracking-tighter italic leading-none"><span className="text-[#5B5FFF]">ATTRACTING</span> is Intent</h3>
                 </div>
-                <div className="space-y-6 text-lg md:text-xl text-slate-400 font-medium leading-relaxed text-left">
-                    <p>It's like someone <span className="text-white font-bold underline decoration-[#5B5FFF]/50 text-left">actively searching</span> for the exact result you provide.</p>
+                <div className="space-y-6 text-lg md:text-xl text-slate-400 font-medium leading-relaxed">
+                    <p>It's like someone <span className="text-white font-bold underline decoration-[#5B5FFF]/50">actively searching</span> for the exact result you provide.</p>
                     <p>When someone is looking for a solution, they are <span className="text-white italic">open, curious, and ready to buy.</span></p>
-                    <p>They aren't looking to get rid of you—they are looking for you to lead them. You are the <span className="text-white border-b border-white/20">Authority</span> they've been waiting for.</p>
+                    <p>They aren't looking to get rid of you—they are looking for you to help them. You are the <span className="text-white border-b border-white/20">Authority</span> they've been waiting for.</p>
                 </div>
             </div>
         </Reveal>
       </div>
-
       <Reveal delay={600}>
         <div className="mt-24 text-center max-w-4xl mx-auto p-12 bg-white/5 rounded-[2.5rem] border border-white/5">
             <p className="text-2xl md:text-4xl text-white font-black uppercase tracking-tighter leading-tight text-center">
@@ -345,7 +387,7 @@ const BridgeSection = () => (
                             { title: "Hustle vs Strategy", desc: "You're relying on raw effort and DMs instead of high-level market positioning. It's unsustainable." }
                         ].map((item, i) => (
                             <div key={i} className="flex gap-6 items-start text-left">
-                                <div className="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center flex-shrink-0 mt-1"><X strokeWidth={3} /></div>
+                                <div className="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center flex-shrink-0 mt-1 text-left"><X strokeWidth={3} /></div>
                                 <div>
                                     <h4 className="text-2xl font-black uppercase text-[#0F172A] mb-2 text-left">{item.title}</h4>
                                     <p className="text-slate-500 text-lg font-medium text-left">{item.desc}</p>
@@ -371,7 +413,6 @@ const PainReality = () => (
                Because they rely on <span className="italic text-center text-[#5B5FFF]">"posting and hoping."</span>
             </p>
         </Reveal>
-        
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
                 { title: "No Predictability", desc: "You wake up every day hoping for a 'bite'. That's not a business, it's gambling." },
@@ -404,7 +445,6 @@ const EngineSection = ({ onTrigger }) => (
                     </p>
                 </Reveal>
             </div>
-            
             <div className="grid md:grid-cols-3 gap-16 relative text-center">
                 {[
                     { icon: <TrendingUp className="w-12 h-12" />, title: "Content That Pulls", desc: "Exact templates that flip the switch from 'pest' to 'authority' instantly." },
@@ -413,7 +453,7 @@ const EngineSection = ({ onTrigger }) => (
                 ].map((item, i) => (
                     <Reveal key={i} delay={i * 200}>
                         <div className="group p-8 rounded-3xl hover:bg-white/5 transition-colors duration-500 border border-transparent hover:border-white/5 h-full flex flex-col items-center">
-                            <div className="w-24 h-24 bg-white/5 text-[#5B5FFF] rounded-[2rem] flex items-center justify-center mx-auto mb-10 group-hover:scale-110 group-hover:bg-[#5B5FFF] group-hover:text-white transition-all duration-500 shadow-[0_0_40px_rgba(91,95,255,0.2)]">{item.icon}</div>
+                            <div className="w-24 h-24 bg-white/5 text-[#5B5FFF] rounded-[2rem] flex items-center justify-center mx-auto mb-10 group-hover:scale-110 group-hover:bg-[#5B5FFF] group-hover:text-white transition-all duration-500 shadow-[0_0_40px_rgba(91,95,255,0.2)] text-left">{item.icon}</div>
                             <h3 className="text-3xl font-[1000] uppercase tracking-tighter text-white mb-6 leading-none text-center">{item.title}</h3>
                             <p className="text-slate-400 text-lg font-medium leading-relaxed text-center">{item.desc}</p>
                         </div>
@@ -421,7 +461,7 @@ const EngineSection = ({ onTrigger }) => (
                 ))}
             </div>
             <div className="mt-32 flex justify-center">
-                <AggressiveCTA onClick={onTrigger} text="Get People Reaching Out To You" alignment="center" />
+                <AggressiveCTA onClick={onTrigger} alignment="center" />
             </div>
         </div>
     </section>
@@ -430,7 +470,7 @@ const EngineSection = ({ onTrigger }) => (
 const AuthorityProfile = () => (
     <section className="py-32 bg-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="grid lg:grid-cols-2 gap-16 items-center text-left">
                 <Reveal direction="left">
                     <div className="relative group max-w-md mx-auto lg:mx-0">
                         <div className="absolute -inset-4 bg-gradient-to-tr from-[#5B5FFF] to-transparent blur-3xl opacity-20 group-hover:opacity-40 transition duration-1000" />
@@ -450,7 +490,6 @@ const AuthorityProfile = () => (
                         </div>
                     </div>
                 </Reveal>
-
                 <Reveal direction="right" delay={200}>
                     <div className="text-left space-y-8">
                         <div className="inline-flex items-center gap-3 px-4 py-2 text-[10px] font-black tracking-[0.4em] uppercase bg-[#5B5FFF]/5 text-[#5B5FFF] border border-[#5B5FFF]/20 rounded-full">
@@ -460,7 +499,7 @@ const AuthorityProfile = () => (
                             Helping business owners <span className="text-[#5B5FFF]">get leads</span> without the chase.
                         </h2>
                         <p className="text-xl md:text-2xl text-slate-500 font-medium leading-relaxed text-left">
-                            I spent years struggling to find consistent results in my own business until I realized that raw effort is no match for a high-converting system. I built this engine to handle the qualifying and filtering so you can focus on what actually makes you money: <span className="text-[#0F172A] font-bold italic">Closing high-value clients.</span>
+                            I spent years struggling to find consistent results in my own business until I realized that raw effort is no match for a high-converting system. I built this engine to handle the qualifying and filtering so you can focus on what actually makes you money: <span className="text-[#0F172A] font-bold italic text-left">Closing high-value clients.</span>
                         </p>
                         <div className="flex items-center gap-4 text-[#5B5FFF]">
                             <UserCheck className="w-8 h-8" />
@@ -484,7 +523,6 @@ const FinalCTA = ({ onTrigger }) => (
                     You need a <span className="text-[#0F172A] border-b-4 border-[#5B5FFF]">SYSTEM</span> that brings clients to you daily — not one that forces you to chase.
                 </p>
             </Reveal>
-            
             <Reveal delay={200}>
                 <div className="flex justify-center">
                     <AggressiveCTA 
@@ -516,7 +554,8 @@ const Footer = () => (
 );
 
 export default function App() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isZaraModalOpen, setIsZaraModalOpen] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -536,20 +575,28 @@ export default function App() {
         .animate-shimmer { animation: shimmer 2s infinite; }
       `}</style>
       
-      <Navbar onTrigger={() => setIsModalOpen(true)} />
+      <Navbar onTrigger={() => setIsZaraModalOpen(true)} />
       <main>
-        <Hero onTrigger={() => setIsModalOpen(true)} />
+        <Hero 
+            onTrigger={() => setIsZaraModalOpen(true)} 
+            onVideoTrigger={() => setIsVideoModalOpen(true)}
+        />
         <CallOut />
         <PerspectiveShift />
         <BridgeSection />
         <PainReality />
-        <EngineSection onTrigger={() => setIsModalOpen(true)} />
+        <EngineSection onTrigger={() => setIsZaraModalOpen(true)} />
         <AuthorityProfile />
-        <FinalCTA onTrigger={() => setIsModalOpen(true)} />
+        <FinalCTA onTrigger={() => setIsZaraModalOpen(true)} />
       </main>
       <Footer />
 
-      <ZaraModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <ZaraModal isOpen={isZaraModalOpen} onClose={() => setIsZaraModalOpen(false)} />
+      <VideoLightbox 
+        isOpen={isVideoModalOpen} 
+        onClose={() => setIsVideoModalOpen(false)} 
+        videoUrl="https://player.mediadelivery.net/play/587199/a6ea9b0b-7601-441f-9d8b-8a3bd37b4f1e"
+      />
     </div>
   );
 }
